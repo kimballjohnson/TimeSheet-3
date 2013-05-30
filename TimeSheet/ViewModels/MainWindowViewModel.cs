@@ -14,24 +14,6 @@ namespace TimeSheet
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        #region Constant fields
-
-        private static readonly CalendarDayModel[] holidays = 
-        {
-            new CalendarDayModel("New Years Day", new DateTime(2013, 1, 1), isHoliday:true),
-            new CalendarDayModel("MLK Day", new DateTime(2013, 1, 21), isHoliday:true),
-            new CalendarDayModel("Presidents Day", new DateTime(2013, 2, 18), isHoliday:true),
-            new CalendarDayModel("Memorial Day", new DateTime(2013, 5, 27), isHoliday:true),
-            new CalendarDayModel("Independence Day", new DateTime(2013, 7, 4), isHoliday:true),
-            new CalendarDayModel("Labor Day", new DateTime(2013, 9, 2), isHoliday:true),
-            new CalendarDayModel("Columbus Day", new DateTime(2013, 10, 14), isHoliday:true),
-            new CalendarDayModel("Veterans Day", new DateTime(2013, 11, 11), isHoliday:true),
-            new CalendarDayModel("Thanksgiving Day", new DateTime(2013, 11, 28), isHoliday:true),
-            new CalendarDayModel("Christmas Day", new DateTime(2013, 12, 25), isHoliday:true),
-        };
-
-        #endregion
-
         #region Constructor
 
         public MainWindowViewModel()
@@ -52,6 +34,10 @@ namespace TimeSheet
             GetDataCommand = new GetDataCommand();
 
             CloseErrorStatusBarCommand = new CloseErrorStatusBarCommand();
+
+            HolidayCalculator hc = new HolidayCalculator(DateTime.Now.AddMonths(-1), ConfigurationManager.AppSettings["HolidayFile"]);
+            foreach (HolidayCalculator.Holiday h in hc.OrderedHolidays)
+                _holidays.Add(new CalendarDayModel(h));
         }
 
         #endregion
@@ -215,6 +201,7 @@ namespace TimeSheet
 
         private List<ChangesetModel> _changesetsForWeek = new List<ChangesetModel>(); 
         private List<CalendarDayModel> _calendarDaysForWeek = new List<CalendarDayModel>();
+        private List<CalendarDayModel> _holidays = new List<CalendarDayModel>();
 
         private bool _gettingWorkItems = false;
         private bool _checkingCalendar = false;
@@ -392,7 +379,7 @@ namespace TimeSheet
 
                 if (CheckCalendar)
                 {
-                    var holidayItemsForDay = holidays.Where(cd => day == cd.StartDay);
+                    var holidayItemsForDay = _holidays.Where(cd => day == cd.StartDay);
                     foreach (var h in holidayItemsForDay)
                         _output.AppendLine("State Holiday: " + h.Title + "\n");
 

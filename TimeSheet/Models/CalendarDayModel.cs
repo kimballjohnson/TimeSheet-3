@@ -25,6 +25,12 @@ namespace TimeSheet
 
         }
 
+        public CalendarDayModel(HolidayCalculator.Holiday h)
+            :this(h.Name, h.Date, isHoliday:true)
+        {
+
+        }
+
         public string Title { get; set; }
         public DateTime StartDay { get; set; }
         public DateTime EndDay { get; set; }

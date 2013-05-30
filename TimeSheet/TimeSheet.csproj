@@ -80,6 +80,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="HolidayCalculator.cs" />
     <Compile Include="Models\ChangesetModel.cs" />
     <Compile Include="Converters\ReverseBoolConverter.cs" />
     <Compile Include="Models\WorkItemModel.cs" />
@@ -136,7 +137,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -147,6 +150,9 @@
     <Resource Include="favicon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Holidays.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="lib\Microsoft.SharePoint.Client.dll" />
     <Content Include="lib\Microsoft.SharePoint.Client.Runtime.dll" />
   </ItemGroup>
