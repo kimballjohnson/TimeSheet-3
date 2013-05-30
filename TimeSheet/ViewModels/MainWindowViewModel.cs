@@ -24,7 +24,7 @@ namespace TimeSheet
             Weeks = new List<WeekModel>();
 
             Weeks.Add(new WeekModel(startOfThisWeek));
-            for(int i = 1; i <= 3; i++)
+            for(int i = 1; i <= ConfigManager.NumberOfWeeks - 1; i++)
             {
                 Weeks.Add(new WeekModel(startOfThisWeek.AddDays(-i * 7)));
             }
@@ -35,7 +35,7 @@ namespace TimeSheet
 
             CloseErrorStatusBarCommand = new CloseErrorStatusBarCommand();
 
-            HolidayCalculator hc = new HolidayCalculator(now.AddMonths(-11), ConfigurationManager.AppSettings["HolidayFile"]);
+            HolidayCalculator hc = new HolidayCalculator(now.AddMonths(-11), ConfigManager.HolidayFile);
             foreach (HolidayCalculator.Holiday h in hc.OrderedHolidays)
                 _holidays.Add(new CalendarDayModel(h));
         }
@@ -254,9 +254,9 @@ namespace TimeSheet
         {
             _calendarDaysForWeek.Clear();
 
-            using (Microsoft.SharePoint.Client.ClientContext client = new Microsoft.SharePoint.Client.ClientContext(ConfigurationManager.AppSettings["SharePointWebUrl"]))
+            using (Microsoft.SharePoint.Client.ClientContext client = new Microsoft.SharePoint.Client.ClientContext(ConfigManager.SharePointWebUrl))
             {
-                List list = client.Web.Lists.GetByTitle(ConfigurationManager.AppSettings["SharepointCalendarName"]);
+                List list = client.Web.Lists.GetByTitle(ConfigManager.SharepointCalendarName);
                 CamlQuery camlQuery = new CamlQuery();
 
                 camlQuery.ViewXml =
@@ -326,12 +326,12 @@ namespace TimeSheet
         {
             _changesetsForWeek.Clear();
 
-            using (TeamFoundationServer tfsServer = TeamFoundationServerFactory.GetServer(ConfigurationManager.AppSettings["TfsServerUrl"]))
+            using (TeamFoundationServer tfsServer = TeamFoundationServerFactory.GetServer(ConfigManager.TfsServerUrl))
             {
                 tfsServer.Authenticate();
 
                 VersionControlServer vcServer = tfsServer.GetService<VersionControlServer>();
-                string projectPath = vcServer.GetTeamProject(ConfigurationManager.AppSettings["TfsProjectName"]).ServerItem;
+                string projectPath = vcServer.GetTeamProject(ConfigManager.TfsProjectName).ServerItem;
 
                 _changesetsForWeek = vcServer.QueryHistory(projectPath,
                                                             VersionSpec.Latest,
@@ -340,7 +340,7 @@ namespace TimeSheet
                                                             Environment.UserName,
                                                             null,
                                                             null,
-                                                            200,
+                                                            ConfigManager.MaxCheckinsPerQuery,
                                                             true,
                                                             false).Cast<Changeset>()
                     .Where(

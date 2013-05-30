@@ -79,6 +79,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ConfigManager.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="HolidayCalculator.cs" />
     <Compile Include="Models\ChangesetModel.cs" />
