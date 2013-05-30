@@ -60,10 +60,6 @@ namespace TimeSheet
 
         public List<WeekModel> Weeks { get; set; }
 
-        public List<ChangesetModel> ChangesetsForWeek { get; set; }
-
-        public List<CalendarDayModel> CalendarDaysForWeek { get; set; }
-
         public GetDataCommand GetDataCommand { get; set; }
 
         public CloseErrorStatusBarCommand CloseErrorStatusBarCommand { get; set; }
@@ -217,6 +213,9 @@ namespace TimeSheet
 
         #region Private Fields
 
+        private List<ChangesetModel> _changesetsForWeek = new List<ChangesetModel>(); 
+        private List<CalendarDayModel> _calendarDaysForWeek = new List<CalendarDayModel>();
+
         private bool _gettingWorkItems = false;
         private bool _checkingCalendar = false;
 
@@ -264,20 +263,9 @@ namespace TimeSheet
             }
         }
 
-        private void CheckCalendarCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            _checkingCalendar = false;
-            if (e.Error != null)
-            {
-                ErrorMessages.Add("Error: " + e.Error.Message);
-                ShowErrorStatusBar = true;
-            }
-            GetDataComplete();
-        }
-
         private void CheckCalendarAsync(object sender, DoWorkEventArgs e)
         {
-            CalendarDaysForWeek = new List<CalendarDayModel>();
+            _calendarDaysForWeek.Clear();
 
             using (Microsoft.SharePoint.Client.ClientContext client = new Microsoft.SharePoint.Client.ClientContext(ConfigurationManager.AppSettings["SharePointWebUrl"]))
             {
@@ -332,13 +320,13 @@ namespace TimeSheet
                 client.ExecuteQuery();
 
                 foreach (ListItem listItem in listItems)
-                    CalendarDaysForWeek.Add(new CalendarDayModel(listItem));
+                    _calendarDaysForWeek.Add(new CalendarDayModel(listItem));
             }
         }
 
-        private void GetWorkItemsCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void CheckCalendarCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            _gettingWorkItems = false;
+            _checkingCalendar = false;
             if (e.Error != null)
             {
                 ErrorMessages.Add("Error: " + e.Error.Message);
@@ -349,6 +337,8 @@ namespace TimeSheet
 
         private void GetWorkItemsAsync(object sender, DoWorkEventArgs e)
         {
+            _changesetsForWeek.Clear();
+
             using (TeamFoundationServer tfsServer = TeamFoundationServerFactory.GetServer(ConfigurationManager.AppSettings["TfsServerUrl"]))
             {
                 tfsServer.Authenticate();
@@ -356,7 +346,7 @@ namespace TimeSheet
                 VersionControlServer vcServer = tfsServer.GetService<VersionControlServer>();
                 string projectPath = vcServer.GetTeamProject(ConfigurationManager.AppSettings["TfsProjectName"]).ServerItem;
 
-                ChangesetsForWeek = vcServer.QueryHistory(projectPath,
+                _changesetsForWeek = vcServer.QueryHistory(projectPath,
                                                             VersionSpec.Latest,
                                                             0,
                                                             RecursionType.Full, 
@@ -375,9 +365,20 @@ namespace TimeSheet
             }
         }
 
+        private void GetWorkItemsCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            _gettingWorkItems = false;
+            if (e.Error != null)
+            {
+                ErrorMessages.Add("Error: " + e.Error.Message);
+                ShowErrorStatusBar = true;
+            }
+            GetDataComplete();
+        }
+
         private string GenerateOutput()
         {
-            if (ChangesetsForWeek == null && !CheckCalendar)
+            if (_changesetsForWeek == null && !CheckCalendar)
                 return "";
 
             StringBuilder _output = new StringBuilder();
@@ -395,19 +396,19 @@ namespace TimeSheet
                     foreach (var h in holidayItemsForDay)
                         _output.AppendLine("State Holiday: " + h.Title + "\n");
 
-                    if (CalendarDaysForWeek != null)
+                    if (_calendarDaysForWeek != null)
                     {
-                        var calendarItemsForDay = CalendarDaysForWeek.Where(cd => day >= cd.StartDay && day <= cd.EndDay);
+                        var calendarItemsForDay = _calendarDaysForWeek.Where(cd => day >= cd.StartDay && day <= cd.EndDay);
                         foreach (var c in calendarItemsForDay)
                             _output.AppendLine("Calendar: " + c.Title + "\n");
                     }
                 }
 
-                if(ChangesetsForWeek == null)
+                if(_changesetsForWeek == null)
                     continue;
 
                 var changesetsForDay =
-                    ChangesetsForWeek.Where(cs => cs.CreationDate.Date == day.Date).OrderBy(
+                    _changesetsForWeek.Where(cs => cs.CreationDate.Date == day.Date).OrderBy(
                         cs => cs.CreationDate);
                 var workItemsForDay =
                     changesetsForDay.SelectMany(cs => cs.WorkItems).Distinct(new WorkItemModelComparer());
