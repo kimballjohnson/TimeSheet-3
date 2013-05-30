@@ -35,7 +35,7 @@ namespace TimeSheet
 
             CloseErrorStatusBarCommand = new CloseErrorStatusBarCommand();
 
-            HolidayCalculator hc = new HolidayCalculator(DateTime.Now.AddMonths(-1), ConfigurationManager.AppSettings["HolidayFile"]);
+            HolidayCalculator hc = new HolidayCalculator(now.AddMonths(-11), ConfigurationManager.AppSettings["HolidayFile"]);
             foreach (HolidayCalculator.Holiday h in hc.OrderedHolidays)
                 _holidays.Add(new CalendarDayModel(h));
         }

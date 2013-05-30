@@ -8,7 +8,7 @@ namespace TimeSheet
 {
     public class CalendarDayModel
     {
-        public CalendarDayModel(string title, DateTime startDay, DateTime? endDay = null, bool isHoliday = false)
+        public CalendarDayModel(string title, DateTime startDay, DateTime? endDay = null)
         {
             Title = title;
             StartDay = startDay.Date;
@@ -16,7 +16,6 @@ namespace TimeSheet
                 EndDay = startDay.Date;
             else
                 EndDay = ((DateTime)endDay).Date;
-            IsHoliday = isHoliday;
         }
 
         public CalendarDayModel(ListItem item)
@@ -26,7 +25,7 @@ namespace TimeSheet
         }
 
         public CalendarDayModel(HolidayCalculator.Holiday h)
-            :this(h.Name, h.Date, isHoliday:true)
+            :this(h.Name, h.Date)
         {
 
         }
@@ -34,6 +33,5 @@ namespace TimeSheet
         public string Title { get; set; }
         public DateTime StartDay { get; set; }
         public DateTime EndDay { get; set; }
-        public bool IsHoliday { get; set; }
     }
 }
