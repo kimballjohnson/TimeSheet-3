@@ -377,20 +377,18 @@ namespace TimeSheet
 
         private string GenerateOutput()
         {
-            if(ChangesetsForWeek == null)
+            if (ChangesetsForWeek == null && !CheckCalendar)
                 return "";
 
             StringBuilder _output = new StringBuilder();
+
             for (int i = 0; i < 7; i++)
             {
                 DateTime day = SelectedWeek.StartOfWeek.AddDays(i);
-                var changesetsForDay =
-                    ChangesetsForWeek.Where(cs => cs.CreationDate.Date == day.Date).OrderBy(
-                        cs => cs.CreationDate);
-                var workItemsForDay =
-                    changesetsForDay.SelectMany(cs => cs.WorkItems).Distinct(new WorkItemModelComparer());
+                
                 _output.AppendLine(day.DayOfWeek + " - " + day.ToShortDateString());
                 _output.AppendLine("--------------------------");
+
                 if (CheckCalendar)
                 {
                     var holidayItemsForDay = holidays.Where(cd => day == cd.StartDay);
@@ -404,6 +402,16 @@ namespace TimeSheet
                             _output.AppendLine("Calendar: " + c.Title + "\n");
                     }
                 }
+
+                if(ChangesetsForWeek == null)
+                    continue;
+
+                var changesetsForDay =
+                    ChangesetsForWeek.Where(cs => cs.CreationDate.Date == day.Date).OrderBy(
+                        cs => cs.CreationDate);
+                var workItemsForDay =
+                    changesetsForDay.SelectMany(cs => cs.WorkItems).Distinct(new WorkItemModelComparer());
+
                 foreach (var workItem in workItemsForDay)
                 {
                     if (_showWorkItemType)
