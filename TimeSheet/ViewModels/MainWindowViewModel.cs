@@ -275,6 +275,13 @@ namespace TimeSheet
 
             using (Microsoft.SharePoint.Client.ClientContext client = new Microsoft.SharePoint.Client.ClientContext(ConfigManager.SharePointWebUrl))
             {
+                var optionsVM = ViewModelLocater.OptionsViewModel;
+                if (optionsVM.SpecifyUserCredentials && optionsVM.CredentialsAreValid)
+                {
+                    NetworkCredential cred = new NetworkCredential(optionsVM.Username, optionsVM.Password, optionsVM.Domain);
+                    client.Credentials = cred;
+                }
+
                 List list = client.Web.Lists.GetByTitle(ConfigManager.SharepointCalendarName);
                 CamlQuery camlQuery = new CamlQuery();
 
