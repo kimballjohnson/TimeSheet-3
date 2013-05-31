@@ -38,6 +38,8 @@ namespace TimeSheet
             HolidayCalculator hc = new HolidayCalculator(now.AddMonths(-11), ConfigManager.HolidayFile);
             foreach (HolidayCalculator.Holiday h in hc.OrderedHolidays)
                 _holidays.Add(new CalendarDayModel(h));
+
+            CurrentUser = Environment.UserDomainName + "\\" + Environment.UserName;
         }
 
         #endregion
@@ -50,9 +52,19 @@ namespace TimeSheet
 
         public CloseErrorStatusBarCommand CloseErrorStatusBarCommand { get; set; }
 
+        private string _currentUser;
+
         public string CurrentUser
         {
-            get { return "Current User: " + Environment.UserName; }
+            get { return _currentUser; }
+            set
+            {
+                if (_currentUser != value)
+                {
+                    _currentUser = value;
+                    RaisePropertyChanged("CurrentUser");
+                }
+            }
         }
 
         private string _output;
@@ -337,7 +349,7 @@ namespace TimeSheet
                                                             VersionSpec.Latest,
                                                             0,
                                                             RecursionType.Full, 
-                                                            Environment.UserName,
+                                                            CurrentUser,
                                                             null,
                                                             null,
                                                             ConfigManager.MaxCheckinsPerQuery,

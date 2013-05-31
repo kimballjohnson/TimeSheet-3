@@ -78,9 +78,13 @@
             </WrapPanel>
 
             <Separator Grid.Column="3" Style="{DynamicResource VerticalSeparatorStyle}" />
-            
-            <Label Content="{Binding CurrentUser}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="4" />
 
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="4">
+                <TextBlock.Inlines>
+                    <Run Text="CurrentUser:" />
+                    <Run Text="{Binding CurrentUser}" />
+                </TextBlock.Inlines>
+            </TextBlock>
         </Grid>
         <Grid Grid.Row="2" Background="LightCoral" Visibility="{Binding ShowErrorStatusBar, Converter={StaticResource _BoolToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
