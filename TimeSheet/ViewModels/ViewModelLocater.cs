@@ -21,5 +21,20 @@ namespace TimeSheet
                 return _mainWindowViewModel;
             }
         }
+
+        private static OptionsViewModel _optionsViewModel;
+
+        public static OptionsViewModel OptionsViewModel
+        {
+            get
+            {
+                if (_optionsViewModel == null)
+                {
+                    _optionsViewModel = new OptionsViewModel();
+                }
+
+                return _optionsViewModel;
+            }
+        }
     }
 }

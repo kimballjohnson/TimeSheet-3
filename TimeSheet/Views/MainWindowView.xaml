@@ -45,6 +45,7 @@
                 <MenuItem Header="_Cut" Command="Cut" />
                 <MenuItem Header="_Copy" Command="Copy" />
                 <MenuItem Header="_Paste" Command="Paste" />
+                <MenuItem Header="_Options" Command="{Binding NavigateCommand}" CommandParameter="Options" />
             </MenuItem>
         </Menu>
 

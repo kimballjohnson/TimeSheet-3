@@ -1,0 +1,56 @@
+﻿<Window x:Class="TimeSheet.OptionsView"
+        Title="Options"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:TimeSheet="clr-namespace:TimeSheet"
+        xmlns:w="clr-namespace:TimeSheet.Classes" mc:Ignorable="d" 
+        Height="250" Width="300">
+    <Window.Resources>
+        <TimeSheet:ReverseBoolConverter x:Key="_ReverseBoolConverter" />
+    </Window.Resources>
+    
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
+            <Label Content="Specify User Credentials" />
+            <CheckBox Height="25" IsChecked="{Binding SpecifyUserCredentials}" />
+        </StackPanel>
+        
+        <Label Content="Domain" Grid.Column="0" Grid.Row="1" />
+        <TextBox  Grid.Column="1" Grid.Row="1" Height="25" 
+                  Text="{Binding Domain}" IsEnabled="{Binding SpecifyUserCredentials}" />
+
+        <Label Content="Username" Grid.Column="0" Grid.Row="2" />
+        <TextBox  Grid.Column="1" Grid.Row="2" Height="25" 
+                  Text="{Binding Username}" IsEnabled="{Binding SpecifyUserCredentials}" />
+
+        <Label Content="Password" Grid.Column="0" Grid.Row="3"/>
+        <PasswordBox Grid.Column="1" Grid.Row="3" Height="25" w:PasswordHelper.Attach="True" w:PasswordHelper.Password="{Binding Password, Mode=TwoWay}"
+                  IsEnabled="{Binding SpecifyUserCredentials}" />
+        
+        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,10,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Height="25" Width="70" Content="Save" Grid.Column="0" Command="{Binding OptionsViewActionCommand}" CommandParameter="Save"/>
+            <Button Height="25" Width="70" Content="Cancel" Grid.Column="1" Command="{Binding OptionsViewActionCommand}" CommandParameter="Cancel"/>
+        </Grid>
+    </Grid>
+</Window>

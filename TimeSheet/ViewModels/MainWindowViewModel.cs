@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
+using System.Net;
 using System.Text;
 using Microsoft.SharePoint.Client;
 using Microsoft.TeamFoundation.Client;
@@ -35,6 +36,8 @@ namespace TimeSheet
 
             CloseErrorStatusBarCommand = new CloseErrorStatusBarCommand();
 
+            NavigateCommand = new NavigateCommand();
+
             HolidayCalculator hc = new HolidayCalculator(now.AddMonths(-11), ConfigManager.HolidayFile);
             foreach (HolidayCalculator.Holiday h in hc.OrderedHolidays)
                 _holidays.Add(new CalendarDayModel(h));
@@ -51,6 +54,10 @@ namespace TimeSheet
         public GetDataCommand GetDataCommand { get; set; }
 
         public CloseErrorStatusBarCommand CloseErrorStatusBarCommand { get; set; }
+
+        public NavigateCommand NavigateCommand { get; set; }
+
+        public OptionsView OptionsWindow { get; set; }
 
         private string _currentUser;
 
@@ -338,17 +345,29 @@ namespace TimeSheet
         {
             _changesetsForWeek.Clear();
 
-            using (TeamFoundationServer tfsServer = TeamFoundationServerFactory.GetServer(ConfigManager.TfsServerUrl))
-            {
-                tfsServer.Authenticate();
+            TeamFoundationServer tfs = null;
 
-                VersionControlServer vcServer = tfsServer.GetService<VersionControlServer>();
+            try
+            {
+                var optionsVM = ViewModelLocater.OptionsViewModel;
+                if (optionsVM.SpecifyUserCredentials && optionsVM.CredentialsAreValid)
+                {
+                    NetworkCredential cred = new NetworkCredential(optionsVM.Username, optionsVM.Password, optionsVM.Domain);
+                    tfs = new TeamFoundationServer(ConfigManager.TfsServerUrl, cred);
+
+                }
+                else
+                    tfs = TeamFoundationServerFactory.GetServer(ConfigManager.TfsServerUrl);
+
+                tfs.EnsureAuthenticated();
+
+                VersionControlServer vcServer = tfs.GetService<VersionControlServer>();
                 string projectPath = vcServer.GetTeamProject(ConfigManager.TfsProjectName).ServerItem;
 
                 _changesetsForWeek = vcServer.QueryHistory(projectPath,
                                                             VersionSpec.Latest,
                                                             0,
-                                                            RecursionType.Full, 
+                                                            RecursionType.Full,
                                                             CurrentUser,
                                                             null,
                                                             null,
@@ -362,6 +381,12 @@ namespace TimeSheet
                     .Select(cs => new ChangesetModel(cs))
                     .ToList();
             }
+            finally
+            {
+                if(tfs != null)
+                    tfs.Dispose();
+            }
+
         }
 
         private void GetWorkItemsCompleted(object sender, RunWorkerCompletedEventArgs e)

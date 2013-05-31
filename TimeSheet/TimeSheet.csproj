@@ -80,6 +80,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\ConfigManager.cs" />
+    <Compile Include="Classes\PasswordHelper.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Classes\HolidayCalculator.cs" />
     <Compile Include="Models\ChangesetModel.cs" />
@@ -93,10 +94,16 @@
     </Compile>
     <Compile Include="Models\CalendarDayModel.cs" />
     <Compile Include="ViewModels\CloseErrorStatusBarCommand.cs" />
+    <Compile Include="ViewModels\NavigateCommand.cs" />
+    <Compile Include="ViewModels\OptionsViewActionCommand.cs" />
+    <Compile Include="ViewModels\OptionsViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\ViewModelLocater.cs" />
     <Compile Include="Models\WeekModel.cs" />
     <Compile Include="Models\WorkItemModelComparer.cs" />
+    <Compile Include="Views\OptionsView.xaml.cs">
+      <DependentUpon>OptionsView.xaml</DependentUpon>
+    </Compile>
     <Page Include="LoadingControl\Block.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -118,6 +125,10 @@
       <DependentUpon>MainWindowView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\OptionsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
