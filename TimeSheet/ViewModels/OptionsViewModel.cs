@@ -99,7 +99,8 @@ namespace TimeSheet
             get
             {
                 if (_domain != _domainBackup || _username != _usernameBackup ||
-                    _specifyUserCredentials != _specifyUserCredentialsBackup)
+                    _specifyUserCredentials != _specifyUserCredentialsBackup || 
+                    _password != _passwordBackup)
                     return true;
 
                 return false;
