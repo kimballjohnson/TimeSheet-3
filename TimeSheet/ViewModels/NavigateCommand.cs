@@ -40,6 +40,7 @@ namespace TimeSheet
                     viewModel.BackupValues();
                     view.DataContext = viewModel;
                     view.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    view.WindowStyle = WindowStyle.ToolWindow;
                     view.Owner = App.Current.MainWindow;
                     ViewModelLocater.MainWindowViewModel.OptionsWindow = view;
                     view.ShowDialog();

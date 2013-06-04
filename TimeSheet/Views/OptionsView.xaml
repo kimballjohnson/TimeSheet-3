@@ -49,7 +49,7 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
-            <Button Height="25" Width="70" Content="Save" Grid.Column="0" Command="{Binding OptionsViewActionCommand}" CommandParameter="Save"/>
+            <Button Height="25" Width="70" Content="Save" Grid.Column="0" Command="{Binding OptionsViewActionCommand}" CommandParameter="Save" IsDefault="True"/>
             <Button Height="25" Width="70" Content="Cancel" Grid.Column="1" Command="{Binding OptionsViewActionCommand}" CommandParameter="Cancel"/>
         </Grid>
     </Grid>
