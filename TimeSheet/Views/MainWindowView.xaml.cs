@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace TimeSheet
+namespace TimeSheet.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
-namespace TimeSheet
+namespace TimeSheet.ViewModels
 {
     public abstract class ViewModelBase : INotifyPropertyChanged
     {

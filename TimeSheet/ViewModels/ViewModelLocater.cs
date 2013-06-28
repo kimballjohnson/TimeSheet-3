@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TimeSheet.Interfaces;
 
-namespace TimeSheet
+namespace TimeSheet.ViewModels
 {
     public static class ViewModelLocater
     {
-        private static MainWindowViewModel _mainWindowViewModel;
+        private static IMainWindowViewModel _mainWindowViewModel;
 
-        public static MainWindowViewModel MainWindowViewModel
+        public static IMainWindowViewModel MainWindowViewModel
         {
             get
             {
@@ -22,9 +23,9 @@ namespace TimeSheet
             }
         }
 
-        private static OptionsViewModel _optionsViewModel;
+        private static IOptionsViewModel _optionsViewModel;
 
-        public static OptionsViewModel OptionsViewModel
+        public static IOptionsViewModel OptionsViewModel
         {
             get
             {

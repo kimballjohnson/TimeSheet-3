@@ -83,6 +83,8 @@
     <Compile Include="Classes\PasswordHelper.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Classes\HolidayCalculator.cs" />
+    <Compile Include="Interfaces\IMainWindowViewModel.cs" />
+    <Compile Include="Interfaces\IOptionsViewModel.cs" />
     <Compile Include="Models\ChangesetModel.cs" />
     <Compile Include="Converters\ReverseBoolConverter.cs" />
     <Compile Include="Models\WorkItemModel.cs" />
@@ -168,6 +170,7 @@
     <Content Include="lib\Microsoft.SharePoint.Client.dll" />
     <Content Include="lib\Microsoft.SharePoint.Client.Runtime.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

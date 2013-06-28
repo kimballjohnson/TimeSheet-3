@@ -10,10 +10,13 @@ using Microsoft.SharePoint.Client;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Server;
 using Microsoft.TeamFoundation.VersionControl.Client;
+using TimeSheet.Interfaces;
+using TimeSheet.Views;
+using TimeSheet.Models;
 
-namespace TimeSheet
+namespace TimeSheet.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
     {
         #region Constructor
 

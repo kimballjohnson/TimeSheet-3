@@ -5,10 +5,11 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using TimeSheet.Interfaces;
 
-namespace TimeSheet
+namespace TimeSheet.ViewModels
 {
-    public class OptionsViewModel : ViewModelBase
+    public class OptionsViewModel : ViewModelBase, IOptionsViewModel
     {
         #region Constructor
 

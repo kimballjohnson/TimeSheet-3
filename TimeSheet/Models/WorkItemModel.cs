@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
-namespace TimeSheet
+namespace TimeSheet.Models
 {
     public class WorkItemModel
     {

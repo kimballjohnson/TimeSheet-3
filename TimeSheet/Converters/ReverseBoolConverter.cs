@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace TimeSheet
+namespace TimeSheet.Converters
 {
     public class ReverseBoolConverter : IValueConverter
     {

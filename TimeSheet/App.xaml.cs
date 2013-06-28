@@ -4,6 +4,8 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Windows;
+using TimeSheet.ViewModels;
+using TimeSheet.Views;
 
 namespace TimeSheet
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TimeSheet
+namespace TimeSheet.Models
 {
     public class WorkItemModelComparer : IEqualityComparer<WorkItemModel>
     {

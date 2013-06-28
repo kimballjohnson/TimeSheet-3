@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.SharePoint.Client;
 
-namespace TimeSheet
+namespace TimeSheet.Models
 {
     public class CalendarDayModel
     {

@@ -2,8 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using TimeSheet.Views;
 
-namespace TimeSheet
+namespace TimeSheet.ViewModels
 {
     public class NavigateCommand : ICommand
     {

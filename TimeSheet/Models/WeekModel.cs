@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TimeSheet
+namespace TimeSheet.Models
 {
     public class WeekModel
     {

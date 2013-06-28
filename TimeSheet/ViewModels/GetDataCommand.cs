@@ -2,11 +2,10 @@
 using System.Linq;
 using System.Windows.Input;
 
-namespace TimeSheet
+namespace TimeSheet.ViewModels
 {
     public class GetDataCommand : ICommand
     {
-
         private bool canExecute = true;
 
         public void SetCanExecute(bool value)
