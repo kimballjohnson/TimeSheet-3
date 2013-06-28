@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using TimeSheet.Views;
 
@@ -39,8 +40,11 @@ namespace TimeSheet.ViewModels
                     var viewModel = ViewModelLocater.OptionsViewModel;
                     viewModel.BackupValues();
                     view.DataContext = viewModel;
+                    view.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    view.WindowStyle = WindowStyle.ToolWindow;
+                    view.Owner = App.Current.MainWindow;
                     ViewModelLocater.MainWindowViewModel.OptionsWindow = view;
-                    view.Show();
+                    view.ShowDialog();
                     break;
             }
         }

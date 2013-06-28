@@ -87,7 +87,7 @@
 
             <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="4">
                 <TextBlock.Inlines>
-                    <Run Text="CurrentUser:" />
+                    <Run Text="Current User:" />
                     <Run Text="{Binding CurrentUser}" />
                 </TextBlock.Inlines>
             </TextBlock>
