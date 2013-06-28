@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using TimeSheet.Views;
 using TimeSheet.ViewModels;
 using TimeSheet.Models;
@@ -15,9 +16,9 @@ namespace TimeSheet.Interfaces
 
         GetDataCommand GetDataCommand { get; set; }
 
-        CloseErrorStatusBarCommand CloseErrorStatusBarCommand { get; set; }
+        ICommand CloseErrorStatusBarCommand { get; set; }
 
-        NavigateCommand NavigateCommand { get; set; }
+        ICommand NavigateCommand { get; set; }
 
         OptionsView OptionsWindow { get; set; }
 

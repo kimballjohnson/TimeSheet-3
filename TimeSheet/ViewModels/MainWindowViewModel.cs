@@ -4,12 +4,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
-using System.Net;
 using System.Text;
-using Microsoft.SharePoint.Client;
-using Microsoft.TeamFoundation.Client;
-using Microsoft.TeamFoundation.Server;
-using Microsoft.TeamFoundation.VersionControl.Client;
+using System.Windows.Input;
 using TimeSheet.Interfaces;
 using TimeSheet.Views;
 using TimeSheet.Models;
@@ -59,9 +55,9 @@ namespace TimeSheet.ViewModels
 
         public GetDataCommand GetDataCommand { get; set; }
 
-        public CloseErrorStatusBarCommand CloseErrorStatusBarCommand { get; set; }
+        public ICommand CloseErrorStatusBarCommand { get; set; }
 
-        public NavigateCommand NavigateCommand { get; set; }
+        public ICommand NavigateCommand { get; set; }
 
         public OptionsView OptionsWindow { get; set; }
 

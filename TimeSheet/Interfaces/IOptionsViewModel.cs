@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Input;
 using TimeSheet.ViewModels;
 
 namespace TimeSheet.Interfaces
 {
     public interface IOptionsViewModel
     {
-        OptionsViewActionCommand OptionsViewActionCommand { get; set; }
+        ICommand OptionsViewActionCommand { get; set; }
 
         string Domain { get; set; }
 

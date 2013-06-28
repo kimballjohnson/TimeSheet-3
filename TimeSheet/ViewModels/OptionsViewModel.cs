@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Windows.Input;
 using TimeSheet.Interfaces;
 
 namespace TimeSheet.ViewModels
@@ -22,7 +23,7 @@ namespace TimeSheet.ViewModels
 
         #region Properties
 
-        public OptionsViewActionCommand OptionsViewActionCommand { get; set; }
+        public ICommand OptionsViewActionCommand { get; set; }
 
         private string _domain;
 
