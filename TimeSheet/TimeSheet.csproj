@@ -83,6 +83,7 @@
     <Compile Include="Classes\PasswordHelper.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Classes\HolidayCalculator.cs" />
+    <Compile Include="Interfaces\IDataService.cs" />
     <Compile Include="Interfaces\IMainWindowViewModel.cs" />
     <Compile Include="Interfaces\IOptionsViewModel.cs" />
     <Compile Include="Models\ChangesetModel.cs" />
@@ -95,6 +96,7 @@
       <DependentUpon>LoadingAnimation.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\CalendarDayModel.cs" />
+    <Compile Include="Services\DataService.cs" />
     <Compile Include="ViewModels\CloseErrorStatusBarCommand.cs" />
     <Compile Include="ViewModels\NavigateCommand.cs" />
     <Compile Include="ViewModels\OptionsViewActionCommand.cs" />

@@ -43,11 +43,14 @@ namespace TimeSheet.ViewModels
 
             HolidayCalculator hc = new HolidayCalculator(now.AddMonths(-11), ConfigManager.HolidayFile);
             foreach (HolidayCalculator.Holiday h in hc.OrderedHolidays)
-                _holidays.Add(new CalendarDayModel(h));
+                holidays.Add(new CalendarDayModel(h));
 
             CurrentUser = Environment.UserDomainName + "\\" + Environment.UserName;
-        }
 
+            DataService.GetChangesetsCompleted += DataService_GetChangesetsCompleted;
+            DataService.GetCalendarDaysCompleted += DataService_GetCalendarDaysCompleted;
+        }
+   
         #endregion
 
         #region Properties
@@ -77,16 +80,16 @@ namespace TimeSheet.ViewModels
             }
         }
 
-        private string _output;
+        private string output;
 
         public string Output
         {
-            get { return _output; }
+            get { return output; }
             set
             {
-                if(_output != value)
+                if(output != value)
                 {
-                    _output = value;
+                    output = value;
                     RaisePropertyChanged("Output");
                 }
             }
@@ -221,12 +224,12 @@ namespace TimeSheet.ViewModels
 
         #region Private Fields
 
-        private List<ChangesetModel> _changesetsForWeek = new List<ChangesetModel>(); 
-        private List<CalendarDayModel> _calendarDaysForWeek = new List<CalendarDayModel>();
-        private List<CalendarDayModel> _holidays = new List<CalendarDayModel>();
+        private List<ChangesetModel> changesetsForWeek = new List<ChangesetModel>(); 
+        private List<CalendarDayModel> calendarDaysForWeek = new List<CalendarDayModel>();
+        private List<CalendarDayModel> holidays = new List<CalendarDayModel>();
 
-        private bool _gettingWorkItems = false;
-        private bool _checkingCalendar = false;
+        private bool gettingChangesets = false;
+        private bool checkingCalendar = false;
 
         #endregion
 
@@ -234,28 +237,16 @@ namespace TimeSheet.ViewModels
 
         public void GetData()
         {
-            BackgroundWorker workItemsWorker = new BackgroundWorker();
-            workItemsWorker.DoWork += new DoWorkEventHandler(GetWorkItemsAsync);
-            workItemsWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(GetWorkItemsCompleted);
-
-            BackgroundWorker calendarWorker = null;
-            if(CheckCalendar)
-            {
-                calendarWorker = new BackgroundWorker();
-                calendarWorker.DoWork += new DoWorkEventHandler(CheckCalendarAsync);
-                calendarWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CheckCalendarCompleted);
-            }
-
             GetDataCommand.SetCanExecute(false);
             IsLoading = true;
             Output = "";
 
-            _gettingWorkItems = true;
-            workItemsWorker.RunWorkerAsync();
+            gettingChangesets = true;
+            DataService.GetChangesets();
             if (CheckCalendar)
             {
-                _checkingCalendar = true;
-                calendarWorker.RunWorkerAsync();
+                checkingCalendar = true;
+                DataService.GetCalendarDays();
             }
         }
 
@@ -265,184 +256,76 @@ namespace TimeSheet.ViewModels
 
         private void GetDataComplete()
         {
-            if (!_gettingWorkItems && (!CheckCalendar || (CheckCalendar && !_checkingCalendar)))
+            if (!gettingChangesets && (!CheckCalendar || (CheckCalendar && !checkingCalendar)))
             {
                 IsLoading = false;
                 Output = GenerateOutput();
             }
         }
 
-        private void CheckCalendarAsync(object sender, DoWorkEventArgs e)
+        private void DataService_GetCalendarDaysCompleted(object sender, Services.GetCalendarDaysCompletedEventArgs e)
         {
-            _calendarDaysForWeek.Clear();
-
-            using (Microsoft.SharePoint.Client.ClientContext client = new Microsoft.SharePoint.Client.ClientContext(ConfigManager.SharePointWebUrl))
-            {
-                var optionsVM = ViewModelLocater.OptionsViewModel;
-                if (optionsVM.SpecifyUserCredentials && optionsVM.CredentialsAreValid)
-                {
-                    NetworkCredential cred = new NetworkCredential(optionsVM.Username, optionsVM.Password, optionsVM.Domain);
-                    client.Credentials = cred;
-                }
-
-                List list = client.Web.Lists.GetByTitle(ConfigManager.SharepointCalendarName);
-                CamlQuery camlQuery = new CamlQuery();
-
-                camlQuery.ViewXml =
-                    @"<View>
-                    <Query>
-                        <Where>
-                        <And>
-                            <Eq>
-                                <FieldRef Name='Author' LookupId='TRUE' />
-                                <Value Type='Integer'><UserID/></Value>
-                            </Eq>
-                            <Or>
-                                <And>
-                                    <Geq>
-                                        <FieldRef Name='EventDate' />
-                                        <Value IncludeTimeValue='FALSE' Type='DateTime'>" + SelectedWeek.StartOfWeek.Date.ToString("o") + @"</Value>
-                                    </Geq>
-                                    <Leq>
-                                        <FieldRef Name='EventDate' />
-                                        <Value IncludeTimeValue='FALSE' Type='DateTime'>" + SelectedWeek.EndOfWeek.Date.ToString("o") + @"</Value>
-                                    </Leq>
-                                </And>
-                                <And>
-                                    <Geq>
-                                        <FieldRef Name='EndDate' />
-                                        <Value IncludeTimeValue='FALSE' Type='DateTime'>" + SelectedWeek.StartOfWeek.Date.ToString("o") + @"</Value>
-                                    </Geq>
-                                    <Leq>
-                                        <FieldRef Name='EndDate' />
-                                        <Value IncludeTimeValue='FALSE' Type='DateTime'>" + SelectedWeek.EndOfWeek.Date.ToString("o") + @"</Value>
-                                    </Leq>
-                                </And>
-                            </Or>
-                        </And>
-                        </Where>
-                    </Query>
-                    <RowLimit>100</RowLimit>
-                    </View>";
-
-                ListItemCollection listItems = list.GetItems(camlQuery);
-                client.Load(
-                    listItems,
-                    items => items
-                                    .Include(
-                                        item => item["Title"],
-                                        item => item["EventDate"],
-                                        item => item["EndDate"]));
-                client.ExecuteQuery();
-
-                foreach (ListItem listItem in listItems)
-                    _calendarDaysForWeek.Add(new CalendarDayModel(listItem));
-            }
-        }
-
-        private void CheckCalendarCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            _checkingCalendar = false;
+            checkingCalendar = false;
             if (e.Error != null)
             {
                 ErrorMessages.Add("Error: " + e.Error.Message);
                 ShowErrorStatusBar = true;
+            }
+            else
+            {
+                calendarDaysForWeek = e.CalendarDays;
             }
             GetDataComplete();
         }
 
-        private void GetWorkItemsAsync(object sender, DoWorkEventArgs e)
+        private void DataService_GetChangesetsCompleted(object sender, Services.GetChangesetsCompletedEventArgs e)
         {
-            _changesetsForWeek.Clear();
-
-            TeamFoundationServer tfs = null;
-
-            try
-            {
-                var optionsVM = ViewModelLocater.OptionsViewModel;
-                if (optionsVM.SpecifyUserCredentials && optionsVM.CredentialsAreValid)
-                {
-                    NetworkCredential cred = new NetworkCredential(optionsVM.Username, optionsVM.Password, optionsVM.Domain);
-                    tfs = new TeamFoundationServer(ConfigManager.TfsServerUrl, cred);
-
-                }
-                else
-                    tfs = TeamFoundationServerFactory.GetServer(ConfigManager.TfsServerUrl);
-
-                tfs.EnsureAuthenticated();
-
-                VersionControlServer vcServer = tfs.GetService<VersionControlServer>();
-                string projectPath = vcServer.GetTeamProject(ConfigManager.TfsProjectName).ServerItem;
-
-                _changesetsForWeek = vcServer.QueryHistory(projectPath,
-                                                            VersionSpec.Latest,
-                                                            0,
-                                                            RecursionType.Full,
-                                                            CurrentUser,
-                                                            null,
-                                                            null,
-                                                            ConfigManager.MaxCheckinsPerQuery,
-                                                            true,
-                                                            false).Cast<Changeset>()
-                    .Where(
-                        cs =>
-                        cs.CreationDate.Date >= SelectedWeek.StartOfWeek.Date &&
-                        cs.CreationDate.Date <= SelectedWeek.EndOfWeek.Date)
-                    .Select(cs => new ChangesetModel(cs))
-                    .ToList();
-            }
-            finally
-            {
-                if(tfs != null)
-                    tfs.Dispose();
-            }
-
-        }
-
-        private void GetWorkItemsCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            _gettingWorkItems = false;
+            gettingChangesets = false;
             if (e.Error != null)
             {
                 ErrorMessages.Add("Error: " + e.Error.Message);
                 ShowErrorStatusBar = true;
+            }
+            else
+            {
+                changesetsForWeek = e.Changesets;
             }
             GetDataComplete();
         }
 
         private string GenerateOutput()
         {
-            if (_changesetsForWeek == null && !CheckCalendar)
+            if (changesetsForWeek == null && !CheckCalendar)
                 return "";
 
-            StringBuilder _output = new StringBuilder();
+            StringBuilder output = new StringBuilder();
 
             for (int i = 0; i < 7; i++)
             {
                 DateTime day = SelectedWeek.StartOfWeek.AddDays(i);
                 
-                _output.AppendLine(day.DayOfWeek + " - " + day.ToShortDateString());
-                _output.AppendLine("--------------------------");
+                output.AppendLine(day.DayOfWeek + " - " + day.ToShortDateString());
+                output.AppendLine("--------------------------");
 
                 if (CheckCalendar)
                 {
-                    var holidayItemsForDay = _holidays.Where(cd => day == cd.StartDay);
+                    var holidayItemsForDay = holidays.Where(cd => day == cd.StartDay);
                     foreach (var h in holidayItemsForDay)
-                        _output.AppendLine("State Holiday: " + h.Title + "\n");
+                        output.AppendLine("State Holiday: " + h.Title + "\n");
 
-                    if (_calendarDaysForWeek != null)
+                    if (calendarDaysForWeek != null)
                     {
-                        var calendarItemsForDay = _calendarDaysForWeek.Where(cd => day >= cd.StartDay && day <= cd.EndDay);
+                        var calendarItemsForDay = calendarDaysForWeek.Where(cd => day >= cd.StartDay && day <= cd.EndDay);
                         foreach (var c in calendarItemsForDay)
-                            _output.AppendLine("Calendar: " + c.Title + "\n");
+                            output.AppendLine("Calendar: " + c.Title + "\n");
                     }
                 }
 
-                if(_changesetsForWeek == null)
+                if(changesetsForWeek == null)
                     continue;
 
                 var changesetsForDay =
-                    _changesetsForWeek.Where(cs => cs.CreationDate.Date == day.Date).OrderBy(
+                    changesetsForWeek.Where(cs => cs.CreationDate.Date == day.Date).OrderBy(
                         cs => cs.CreationDate);
                 var workItemsForDay =
                     changesetsForDay.SelectMany(cs => cs.WorkItems).Distinct(new WorkItemModelComparer());
@@ -450,16 +333,16 @@ namespace TimeSheet.ViewModels
                 foreach (var workItem in workItemsForDay)
                 {
                     if (_showWorkItemType)
-                        _output.Append(workItem.Type + " ");
+                        output.Append(workItem.Type + " ");
 
                     if (ShowCompletedHours && workItem.Type == "Task")
                     {
-                        _output.Append(workItem.ID + " - " + workItem.Title);
-                        _output.AppendLine(" (" + workItem.CompletedWork + " hours)");
+                        output.Append(workItem.ID + " - " + workItem.Title);
+                        output.AppendLine(" (" + workItem.CompletedWork + " hours)");
                     }
                     else
                     {
-                        _output.AppendLine(workItem.ID + " - " + workItem.Title);
+                        output.AppendLine(workItem.ID + " - " + workItem.Title);
                     }
 
                     if (ShowComments)
@@ -469,15 +352,15 @@ namespace TimeSheet.ViewModels
                                 .OrderBy(cs => cs.CreationDate);
                         foreach (var changeset in changesetsForWorkItemOnThisDay)
                         {
-                            _output.AppendLine("Changeset " + changeset.ID + ": " + changeset.Comment);
+                            output.AppendLine("Changeset " + changeset.ID + ": " + changeset.Comment);
                         }
                     }
-                    _output.AppendLine();
+                    output.AppendLine();
                 }
-                _output.AppendLine();
+                output.AppendLine();
             }
 
-            return _output.ToString();
+            return output.ToString();
         }
 
         #endregion
