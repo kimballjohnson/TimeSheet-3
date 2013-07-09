@@ -74,5 +74,24 @@ namespace TimeSheet
                 return _maxCheckinsPerQuery;
             }
         }
+
+        public static bool StartTimeSheetDataWebService
+        {
+            get 
+            {
+                string value = ConfigurationManager.AppSettings["StartTimeSheetDataWebService"];
+                return value.ToLower() == "true"; 
+            }
+        }
+
+        public static string ChromeExtensionKey
+        {
+            get { return ConfigurationManager.AppSettings["ChromeExtensionKey"]; }
+        }
+
+        public static string TimeSheetDataWebServiceUrl
+        {
+            get { return ConfigurationManager.AppSettings["TimeSheetDataWebServiceUrl"]; }
+        }
     }
 }

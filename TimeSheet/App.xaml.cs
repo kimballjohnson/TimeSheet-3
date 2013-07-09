@@ -29,7 +29,9 @@ namespace TimeSheet
 
             this.MainWindow = view;
             this.MainWindow.Show();
-            WebDataService.StartHttpWebService();
+
+            if(ConfigManager.StartTimeSheetDataWebService)
+                TimeSheetDataWebService.StartHttpWebService();
         }
     }
 }

@@ -9,20 +9,21 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Web.Script.Serialization;
 using TimeSheet.Classes;
+using TimeSheet.Interfaces;
 using TimeSheet.Models;
 using TimeSheet.ViewModels;
 
 namespace TimeSheet.Services
 {
-    public class WebDataService
+    public class TimeSheetDataWebService : ITimeSheetDataWebService
     {
         private static WebServer server;
 
         public static void StartHttpWebService()
         {
             Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Access-Control-Allow-Origin", @"chrome-extension://olkfibeefailkgnikajfapombeiigmej");
-            server = new WebServer(SendResponse, headers, "http://localhost:40347/timesheet/");
+            headers.Add("Access-Control-Allow-Origin", @"chrome-extension://" + ConfigManager.ChromeExtensionKey);
+            server = new WebServer(SendResponse, headers, ConfigManager.TimeSheetDataWebServiceUrl);
             server.Run();
         }
 
@@ -31,7 +32,7 @@ namespace TimeSheet.Services
             server.Stop();
         }
 
-        public static string SendResponse(HttpListenerRequest request)
+        private static string SendResponse(HttpListenerRequest request)
         {
             var mainWindowVM = ViewModelLocater.MainWindowViewModel;
 
@@ -54,10 +55,6 @@ namespace TimeSheet.Services
                 var workItemsForDay =
                     changesetsForDay.SelectMany(cs => cs.WorkItems).Distinct(new WorkItemModelComparer());
 
-
-                //List<WorkItemModel> workItemsForDay = new List<WorkItemModel>();
-                //workItemsForDay.Add(new WorkItemModel() { CompletedWork = 2, ID = 234, Title = "Test Title", Type = "Task" });
-
                 foreach (var workItem in workItemsForDay)
                 {
                     if (mainWindowVM.ShowWorkItemType)
@@ -66,11 +63,11 @@ namespace TimeSheet.Services
                     if (mainWindowVM.ShowCompletedHours && workItem.Type == "Task")
                     {
                         output.Append(workItem.ID + " - " + workItem.Title);
-                        output.AppendLine(" (" + workItem.CompletedWork + " hours)");
+                        output.Append(" (" + workItem.CompletedWork + " hours)\\n");
                     }
                     else
                     {
-                        output.Append(workItem.ID + " - " + workItem.Title);
+                        output.Append(workItem.ID + " - " + workItem.Title + "\\n");
                     }
 
                     if (mainWindowVM.ShowComments)
@@ -80,9 +77,10 @@ namespace TimeSheet.Services
                                 .OrderBy(cs => cs.CreationDate);
                         foreach (var changeset in changesetsForWorkItemOnThisDay)
                         {
-                            output.AppendLine("Changeset " + changeset.ID + ": " + changeset.Comment);
+                            output.Append("Changeset " + changeset.ID + ": " + changeset.Comment + "\\n");
                         }
                     }
+                    output.Append("\\n");
                 }
 
                 note.Description = output.ToString();
@@ -93,9 +91,8 @@ namespace TimeSheet.Services
             ser.WriteObject(stream1, notes);
             stream1.Position = 0;
             StreamReader sr = new StreamReader(stream1);
-            return sr.ReadToEnd();
-
-
+            string response = sr.ReadToEnd();
+            return response;
         }
     }
 }
