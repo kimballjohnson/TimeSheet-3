@@ -38,6 +38,12 @@ namespace TimeSheet.Services
 
             NotesDTO[] notes = new NotesDTO[7];
 
+            //WorkItemModel wi = new WorkItemModel() { CompletedWork = 3, ID = 4045, Title = "A test work item", Type = "Task" };
+            //List<WorkItemModel> wis = new List<WorkItemModel>() { wi };
+            //ChangesetModel csm = new ChangesetModel() { Comment = "test comment - fgfgfddf", CreationDate = DateTime.Now.AddDays(-8), ID = 32004, WorkItems = wis };
+            //List<ChangesetModel> css = new List<ChangesetModel>() { csm };
+            //mainWindowVM.ChangesetsForWeek = css;
+
             for (int i = 0; i < 7; i++)
             {
                 StringBuilder output = new StringBuilder();

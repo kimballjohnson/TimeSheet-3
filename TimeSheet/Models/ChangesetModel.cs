@@ -8,6 +8,10 @@ namespace TimeSheet.Models
 {
     public class ChangesetModel
     {
+        public ChangesetModel()
+        {
+        }
+
         public ChangesetModel(Changeset changeset)
         {
             ID = changeset.ChangesetId;
