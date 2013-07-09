@@ -9,6 +9,10 @@ namespace TimeSheet.Models
 {
     public class WorkItemModel
     {
+        public WorkItemModel()
+        {
+        }
+
         public WorkItemModel(WorkItem workItem)
         {
             Title = workItem.Title;

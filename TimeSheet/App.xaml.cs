@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Windows;
+using TimeSheet.Services;
 using TimeSheet.ViewModels;
 using TimeSheet.Views;
 
@@ -28,6 +29,7 @@ namespace TimeSheet
 
             this.MainWindow = view;
             this.MainWindow.Show();
+            WebDataService.StartHttpWebService();
         }
     }
 }

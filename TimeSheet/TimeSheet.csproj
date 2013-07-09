@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TimeSheet</RootNamespace>
     <AssemblyName>TimeSheet</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -34,6 +34,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -43,6 +44,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
@@ -62,6 +64,8 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -81,6 +85,7 @@
     </ApplicationDefinition>
     <Compile Include="Classes\ConfigManager.cs" />
     <Compile Include="Classes\PasswordHelper.cs" />
+    <Compile Include="Classes\WebServer.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Classes\HolidayCalculator.cs" />
     <Compile Include="Interfaces\IDataService.cs" />
@@ -88,6 +93,7 @@
     <Compile Include="Interfaces\IOptionsViewModel.cs" />
     <Compile Include="Models\ChangesetModel.cs" />
     <Compile Include="Converters\ReverseBoolConverter.cs" />
+    <Compile Include="Models\NotesDTO.cs" />
     <Compile Include="Models\WorkItemModel.cs" />
     <Compile Include="LoadingControl\Block.xaml.cs">
       <DependentUpon>Block.xaml</DependentUpon>
@@ -97,6 +103,7 @@
     </Compile>
     <Compile Include="Models\CalendarDayModel.cs" />
     <Compile Include="Services\DataService.cs" />
+    <Compile Include="Services\WebDataService.cs" />
     <Compile Include="ViewModels\CloseErrorStatusBarCommand.cs" />
     <Compile Include="ViewModels\NavigateCommand.cs" />
     <Compile Include="ViewModels\OptionsViewActionCommand.cs" />

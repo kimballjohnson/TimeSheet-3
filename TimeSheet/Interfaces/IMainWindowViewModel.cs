@@ -42,7 +42,8 @@ namespace TimeSheet.Interfaces
 
         ObservableCollection<string> ErrorMessages { get; set; }
 
-        void GetData();
+        List<ChangesetModel> ChangesetsForWeek { get; set; }
 
+        void GetData();
     }
 }

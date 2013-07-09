@@ -216,11 +216,17 @@ namespace TimeSheet.ViewModels
             }
         }
 
+        private List<ChangesetModel> _ChangesetsForWeek = new List<ChangesetModel>();
+        public List<ChangesetModel> ChangesetsForWeek
+        {
+            get { return _ChangesetsForWeek; }
+            set { _ChangesetsForWeek = value; }
+        }
+
         #endregion
 
         #region Private Fields
 
-        private List<ChangesetModel> changesetsForWeek = new List<ChangesetModel>(); 
         private List<CalendarDayModel> calendarDaysForWeek = new List<CalendarDayModel>();
         private List<CalendarDayModel> holidays = new List<CalendarDayModel>();
 
@@ -284,14 +290,14 @@ namespace TimeSheet.ViewModels
             }
             else
             {
-                changesetsForWeek = e.Changesets;
+                ChangesetsForWeek = e.Changesets;
             }
             GetDataComplete();
         }
 
         private string GenerateOutput()
         {
-            if (changesetsForWeek == null && !CheckCalendar)
+            if (ChangesetsForWeek == null && !CheckCalendar)
                 return "";
 
             StringBuilder output = new StringBuilder();
@@ -317,11 +323,11 @@ namespace TimeSheet.ViewModels
                     }
                 }
 
-                if(changesetsForWeek == null)
+                if(ChangesetsForWeek == null)
                     continue;
 
                 var changesetsForDay =
-                    changesetsForWeek.Where(cs => cs.CreationDate.Date == day.Date).OrderBy(
+                    ChangesetsForWeek.Where(cs => cs.CreationDate.Date == day.Date).OrderBy(
                         cs => cs.CreationDate);
                 var workItemsForDay =
                     changesetsForDay.SelectMany(cs => cs.WorkItems).Distinct(new WorkItemModelComparer());
