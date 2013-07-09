@@ -84,11 +84,6 @@ namespace TimeSheet
             }
         }
 
-        public static string ChromeExtensionKey
-        {
-            get { return ConfigurationManager.AppSettings["ChromeExtensionKey"]; }
-        }
-
         public static string TimeSheetDataWebServiceUrl
         {
             get { return ConfigurationManager.AppSettings["TimeSheetDataWebServiceUrl"]; }

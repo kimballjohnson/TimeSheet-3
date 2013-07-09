@@ -8,7 +8,7 @@ namespace TimeSheet.Interfaces
 {
     public interface ITimeSheetDataWebService
     {
-        static void StartHttpWebService()
-        static void StopHttpWebService()
+        void StartHttpWebService();
+        void StopHttpWebService();
     }
 }

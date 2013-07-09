@@ -17,22 +17,22 @@ namespace TimeSheet.Services
 {
     public class TimeSheetDataWebService : ITimeSheetDataWebService
     {
-        private static WebServer server;
+        private WebServer server;
 
-        public static void StartHttpWebService()
+        public void StartHttpWebService()
         {
             Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("Access-Control-Allow-Origin", @"chrome-extension://" + ConfigManager.ChromeExtensionKey);
+            headers.Add("Access-Control-Allow-Origin", "*");
             server = new WebServer(SendResponse, headers, ConfigManager.TimeSheetDataWebServiceUrl);
             server.Run();
         }
 
-        public static void StopHttpWebService()
+        public void StopHttpWebService()
         {
             server.Stop();
         }
 
-        private static string SendResponse(HttpListenerRequest request)
+        private string SendResponse(HttpListenerRequest request)
         {
             var mainWindowVM = ViewModelLocater.MainWindowViewModel;
 
