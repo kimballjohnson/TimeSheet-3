@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace TimeSheet.Classes
 {
+    /// <summary>
+    /// Adapted from David
+    /// http://www.codehosting.net/blog/BlogEngine/post/Simple-C-Web-Server.aspx
+    /// </summary>
     public class WebServer
     {
         private readonly HttpListener _listener = new HttpListener();
@@ -17,8 +21,7 @@ namespace TimeSheet.Classes
         public WebServer(Func<HttpListenerRequest, string> method, string[] prefixes, Dictionary<string, string> headers = null)
         {
             if (!HttpListener.IsSupported)
-                throw new NotSupportedException(
-                    "Needs Windows XP SP2, Server 2003 or later.");
+                throw new NotSupportedException("Needs Windows XP SP2, Server 2003 or later.");
 
             // URI prefixes are required, for example 
             // "http://localhost:8080/index/".
@@ -48,7 +51,6 @@ namespace TimeSheet.Classes
         {
             ThreadPool.QueueUserWorkItem((o) =>
             {
-                Console.WriteLine("Webserver running...");
                 try
                 {
                     while (_listener.IsListening)
