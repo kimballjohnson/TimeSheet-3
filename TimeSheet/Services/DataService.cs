@@ -51,11 +51,11 @@ namespace TimeSheet.Services
                 if (optionsVM.SpecifyUserCredentials && optionsVM.CredentialsAreValid)
                 {
                     NetworkCredential cred = new NetworkCredential(optionsVM.Username, optionsVM.Password, optionsVM.Domain);
-                    tfs = new TeamFoundationServer(ConfigManager.TfsServerUrl, cred);
+                    tfs = new TeamFoundationServer(ConfigManager.TfsServerUrl + "/" + ConfigManager.TfsCollectionName, cred);
 
                 }
                 else
-                    tfs = TeamFoundationServerFactory.GetServer(ConfigManager.TfsServerUrl);
+                    tfs = TeamFoundationServerFactory.GetServer(ConfigManager.TfsServerUrl + "/" + ConfigManager.TfsCollectionName);
 
                 tfs.EnsureAuthenticated();
 

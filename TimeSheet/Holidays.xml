@@ -39,8 +39,8 @@
 	</Holiday>
   <Holiday name="Thanksgiving Day">
     <Month>11</Month>
-    <DayOfWeek>5</DayOfWeek>
-    <WeekOfMonth>4</WeekOfMonth>
+    <DayOfWeek>4</DayOfWeek>
+    <WeekOfMonth>5</WeekOfMonth>
   </Holiday>
 	<Holiday name="Christmas Day">
 		<Month>12</Month>

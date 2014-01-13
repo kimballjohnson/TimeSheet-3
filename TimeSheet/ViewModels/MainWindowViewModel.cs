@@ -45,6 +45,9 @@ namespace TimeSheet.ViewModels
 
             DataService.GetChangesetsCompleted += DataService_GetChangesetsCompleted;
             DataService.GetCalendarDaysCompleted += DataService_GetCalendarDaysCompleted;
+
+            ShowComments = true;
+            CheckCalendar = true;
         }
    
         #endregion

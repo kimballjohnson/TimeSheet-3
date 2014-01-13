@@ -13,6 +13,11 @@ namespace TimeSheet
             get { return ConfigurationManager.AppSettings["TfsServerUrl"]; }
         }
 
+        public static string TfsCollectionName
+        {
+            get { return ConfigurationManager.AppSettings["TfsCollectionName"]; }
+        }
+
         public static string TfsProjectName
         {
             get { return ConfigurationManager.AppSettings["TfsProjectName"]; }
