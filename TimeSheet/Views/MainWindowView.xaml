@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:Converters="clr-namespace:TimeSheet.Converters" 
         mc:Ignorable="d"
-        d:DesignHeight="600" d:DesignWidth="800"
-        Title="TimeSheet" Height="600" Width="800">
+        d:DesignHeight="700" d:DesignWidth="900"
+        Title="TimeSheet" Height="700" Width="900">
     <Window.Resources>
         <DataTemplate x:Key="WeekTemplate">
             <TextBlock Text="{Binding Name}" />
@@ -77,10 +77,11 @@
             <Separator Grid.Column="1" Style="{DynamicResource VerticalSeparatorStyle}" />
 
             <WrapPanel Orientation="Vertical" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">
-                <CheckBox IsChecked="{Binding ShowComments, Mode=TwoWay}" Content="Show Comments" />
+                <CheckBox IsChecked="{Binding ShowComments, Mode=TwoWay}" Content="Show Comments" IsEnabled="{Binding ShowAllChangesets, Converter={StaticResource _ReverseBoolConverter}}"/>
                 <CheckBox IsChecked="{Binding ShowWorkItemType, Mode=TwoWay}" Content="Show Work Item Type" />
                 <CheckBox IsChecked="{Binding ShowCompletedHours, Mode=TwoWay}" Content="Show Completed Hours" />
                 <CheckBox IsChecked="{Binding CheckCalendar, Mode=TwoWay}" Content="Check Calendar" IsEnabled="{Binding IsLoading, Converter={StaticResource _ReverseBoolConverter}}"/>
+                <CheckBox IsChecked="{Binding ShowAllChangesets, Mode=TwoWay}" Content="Show All Changesets" />
             </WrapPanel>
 
             <Separator Grid.Column="3" Style="{DynamicResource VerticalSeparatorStyle}" />

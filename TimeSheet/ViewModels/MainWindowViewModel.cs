@@ -142,6 +142,25 @@ namespace TimeSheet.ViewModels
             }
         }
 
+        private bool _showAllChangesets;
+
+        public bool ShowAllChangesets
+        {
+            get { return _showAllChangesets; }
+            set
+            {
+                if (_showAllChangesets != value)
+                {
+                    if (value)
+                        ShowComments = true;
+
+                    _showAllChangesets = value;
+                    RaisePropertyChanged("ShowAllChangesets");
+                    Output = GenerateOutput();
+                }
+            }
+        }
+
         private bool _isLoading;
 
         public bool IsLoading
@@ -362,6 +381,19 @@ namespace TimeSheet.ViewModels
                     }
                     output.AppendLine();
                 }
+                
+
+                if (ShowAllChangesets)
+                {
+                    var changesetsWithoutWorkItem = changesetsForDay.Where(cs => !cs.WorkItems.Any());
+                    if(changesetsWithoutWorkItem.Any())
+                        output.AppendLine("No work item:");
+                    foreach (var changeset in changesetsWithoutWorkItem)
+                    {
+                        output.AppendLine("Changeset " + changeset.ID + ": " + changeset.Comment);
+                    }
+                }
+
                 output.AppendLine();
             }
 
